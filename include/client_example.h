@@ -5,6 +5,6 @@
 #ifndef TERMESSAGE_CLIENT_EXAMPLE_H
 #define TERMESSAGE_CLIENT_EXAMPLE_H
 
-void client_example();
+int client_example(int argc, char *argv[]);
 
 #endif //TERMESSAGE_CLIENT_EXAMPLE_H

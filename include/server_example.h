@@ -5,6 +5,6 @@
 #ifndef TERMESSAGE_SERVER_EXAMPLE_H
 #define TERMESSAGE_SERVER_EXAMPLE_H
 
-void server_example();
+int server_example();
 
 #endif //TERMESSAGE_SERVER_EXAMPLE_H

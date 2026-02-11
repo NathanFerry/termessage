@@ -6,5 +6,9 @@
 #include "../include/server_example.h"
 
 int main(int argc, char *argv[]) {
-    server_example();
+    if (argc == 1) {
+        server_example();
+    } else {
+        client_example(argc, argv);
+    }
 }

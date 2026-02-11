@@ -2,6 +2,9 @@
 // Created by nathan on 2/9/26.
 //
 
+#include "../../include/server_example.h"
+#include "../../include/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -29,17 +32,6 @@ void sigchld_handler(int s)
     while(waitpid(-1, NULL, WNOHANG) > 0);
 
     errno = saved_errno;
-}
-
-
-// get sockaddr, IPv4 or IPv6:
-void *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
 int server_example(void)
@@ -126,9 +118,10 @@ int server_example(void)
 
         if (!fork()) { // this is the child process
             close(sockfd); // child doesn't need the listener
-            int send_err = send(new_fd, "Hello, world!", 13, 0)
-            if (send_err == -1)
+            int send_err = send(new_fd, "Hello, world!", 13, 0);
+            if (send_err == -1) {
                 perror("send");
+            }
             close(new_fd);
             exit(0);
         }
