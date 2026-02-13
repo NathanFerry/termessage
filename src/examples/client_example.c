@@ -19,25 +19,38 @@
 
 #define MAXDATASIZE 100 // max number of bytes we can get at once
 
+int retrieveAddrInfo(char address[], struct addrinfo **addrinfo_out) {
+    struct addrinfo hints = {0}, *servinfo;
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    int rv = getaddrinfo(address, PORT, &hints, addrinfo_out);
+    if (rv != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        return -1;
+    }
+
+    return 0;
+}
+
 int client_example(int argc, char *argv[]) {
-    int sockfd;
-    char buf[MAXDATASIZE];
-    struct addrinfo hints = {0}, *servinfo, *p;
-    char ipaddrstr[INET6_ADDRSTRLEN];
 
     if (argc != 2) {
         fprintf(stderr,"usage: client hostname\n");
         exit(1);
     }
 
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-
-    int rv = getaddrinfo(argv[1], PORT, &hints, &servinfo);
-    if (rv != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+    struct addrinfo *servinfo;
+    int retattrinfo_err = retrieveAddrInfo(argv[1], &servinfo);
+    if (retattrinfo_err != 0) {
+        fprintf(stderr, "Can't retrieve addrinfo. Error code: %d\n", retattrinfo_err);
         return 1;
     }
+
+    int sockfd;
+    struct addrinfo *p;
+    char ipaddrstr[INET6_ADDRSTRLEN];
 
     // loop through all the results and connect to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next) {
@@ -69,6 +82,7 @@ int client_example(int argc, char *argv[]) {
 
     freeaddrinfo(servinfo); // all done with this structure
 
+    char buf[MAXDATASIZE];
     int numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0);
     if (numbytes == -1) {
         perror("recv");

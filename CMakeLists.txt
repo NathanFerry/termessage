@@ -8,7 +8,7 @@ add_executable(termessage)
 target_sources(termessage
         PRIVATE
             src/main.c
-            src/utils.c
+            src/examples/utils.c
             src/examples/client_example.c
             src/examples/server_example.c
 )
