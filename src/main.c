@@ -2,6 +2,9 @@
 // Created by Nathan on 1/27/26.
 //
 
+#define TB_IMPL
+#include "../include/termbox2.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -12,7 +15,31 @@
 #define MAX_FDS 64
 
 int main(int argc, char* argv[]) {
-    struct pollfd fds[MAX_FDS];
+    struct tb_event ev;
+    int y = 0;
+
+    tb_init();
+
+    tb_printf(500, y++, TB_GREEN, 0, "hello from termbox");
+    tb_printf(500, y++, 0, 0, "width=%d height=%d", tb_width(), tb_height());
+    tb_printf(500, y++, 0, 0, "press any key...");
+    tb_present();
+
+    tb_poll_event(&ev);
+
+    y++;
+    tb_printf(0, y++, 0, 0, "event type=%d key=%d ch=%c", ev.type, ev.key, ev.ch);
+    tb_printf(0, y++, 0, 0, "press any key to quit...");
+    tb_present();
+
+    tb_poll_event(&ev);
+    tb_shutdown();
+
+    return 0;
+}
+
+void test_server_and_client(int argc, char* argv[]) {
+        struct pollfd fds[MAX_FDS];
     int nfds = 0;
 
     // 1. Create the Listening (Server) Socket
@@ -92,5 +119,4 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-    return 0;
 }
