@@ -14,30 +14,6 @@
 #define PORT 8080
 #define MAX_FDS 64
 
-int main(int argc, char* argv[]) {
-    struct tb_event ev;
-    int y = 0;
-
-    tb_init();
-
-    tb_printf(500, y++, TB_GREEN, 0, "hello from termbox");
-    tb_printf(500, y++, 0, 0, "width=%d height=%d", tb_width(), tb_height());
-    tb_printf(500, y++, 0, 0, "press any key...");
-    tb_present();
-
-    tb_poll_event(&ev);
-
-    y++;
-    tb_printf(0, y++, 0, 0, "event type=%d key=%d ch=%c", ev.type, ev.key, ev.ch);
-    tb_printf(0, y++, 0, 0, "press any key to quit...");
-    tb_present();
-
-    tb_poll_event(&ev);
-    tb_shutdown();
-
-    return 0;
-}
-
 void test_server_and_client(int argc, char* argv[]) {
         struct pollfd fds[MAX_FDS];
     int nfds = 0;
@@ -119,4 +95,32 @@ void test_server_and_client(int argc, char* argv[]) {
             }
         }
     }
+}
+
+int display_example() {
+    struct tb_event ev;
+    int y = 0;
+
+    tb_init();
+
+    tb_printf(50, y++, TB_GREEN, 0, "hello from termbox");
+    tb_printf(50, y++, 0, 0, "width=%d height=%d", tb_width(), tb_height());
+    tb_printf(50, y++, 0, 0, "press any key...");
+    tb_present();
+
+    tb_poll_event(&ev);
+
+    y++;
+    tb_printf(0, y++, 0, 0, "event type=%d key=%d ch=%c", ev.type, ev.key, ev.ch);
+    tb_printf(0, y++, 0, 0, "press any key to quit...");
+    tb_present();
+
+    tb_poll_event(&ev);
+    tb_shutdown();
+
+    return 0;
+}
+
+int main(int argc, char* argv[]) {
+    display_example();
 }
